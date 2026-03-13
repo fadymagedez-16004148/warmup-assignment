@@ -409,7 +409,57 @@ function getRequiredHoursPerMonth(textFile, rateFile, bonusCount, driverID, mont
 // ============================================================
 function getNetPay(driverID, actualHours, requiredHours, rateFile) {
     // TODO: Implement this function
+    let data = fs.readFileSync(rateFile, "utf8").trim().split("\n");
+
+    let basePay = 0;
+    let tier = 0;
+
+    for (let line of data) {
+        let parts = line.split(",");
+
+        if (parts[0] === driverID) {
+            basePay = Number(parts[2]);
+            tier = Number(parts[3]);
+        }
+    }
+
+    function toSeconds(time) {
+        let [h, m, s] = time.split(":").map(Number);
+        return h * 3600 + m * 60 + s;
+    }
+
+    let actual = toSeconds(actualHours);
+    let required = toSeconds(requiredHours);
+
+    if (actual >= required) {
+        return basePay;
+    }
+
+    let missingSeconds = required - actual;
+    let missingHours = Math.floor(missingSeconds / 3600);
+
+    let allowance = 0;
+
+    if (tier === 1) allowance = 50;
+    if (tier === 2) allowance = 20;
+    if (tier === 3) allowance = 10;
+    if (tier === 4) allowance = 3;
+
+    let billableHours = missingHours - allowance;
+
+    if (billableHours < 0) {
+        billableHours = 0;
+    }
+
+    let deductionRate = Math.floor(basePay / 185);
+
+    let salaryDeduction = billableHours * deductionRate;
+
+    let netPay = basePay - salaryDeduction;
+
+    return netPay;
 }
+
 
 module.exports = {
     getShiftDuration,

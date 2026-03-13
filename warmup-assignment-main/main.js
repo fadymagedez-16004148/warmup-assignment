@@ -345,7 +345,59 @@ function getTotalActiveHoursPerMonth(textFile, driverID, month) {
 // ============================================================
 function getRequiredHoursPerMonth(textFile, rateFile, bonusCount, driverID, month) {
     // TODO: Implement this function
+    let shifts = fs.readFileSync(textFile, "utf8").trim().split("\n");
+    let rates = fs.readFileSync(rateFile, "utf8").trim().split("\n");
+
+    let dayOff = "";
+
+    // find driver's day off
+    for (let line of rates) {
+        let parts = line.split(",");
+        if (parts[0] === driverID) {
+            dayOff = parts[1];
+        }
+    }
+
+    let totalSeconds = 0;
+
+    for (let line of shifts) {
+
+        let parts = line.split(",");
+
+        let id = parts[0];
+        let date = parts[2];
+
+        if (id !== driverID) continue;
+
+        let recordMonth = Number(date.split("-")[1]);
+
+        if (recordMonth !== Number(month)) continue;
+
+        let d = new Date(date);
+        let dayName = d.toLocaleDateString("en-US", { weekday: "long" });
+
+        if (dayName === dayOff) continue;
+
+        if (date >= "2025-04-10" && date <= "2025-04-30") {
+            totalSeconds += 6 * 3600;
+        } else {
+            totalSeconds += 8 * 3600 + 24 * 60;
+        }
+    }
+
+    // subtract bonus hours
+    totalSeconds -= bonusCount * 2 * 3600;
+
+    let h = Math.floor(totalSeconds / 3600);
+    let m = Math.floor((totalSeconds % 3600) / 60);
+    let s = totalSeconds % 60;
+
+    m = m.toString().padStart(2, "0");
+    s = s.toString().padStart(2, "0");
+
+    return `${h}:${m}:${s}`;
 }
+
 
 // ============================================================
 // Function 10: getNetPay(driverID, actualHours, requiredHours, rateFile)

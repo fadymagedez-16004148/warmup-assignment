@@ -100,6 +100,24 @@ function getIdleTime(startTime, endTime) {
 // ============================================================
 function getActiveTime(shiftDuration, idleTime) {
     // TODO: Implement this function
+    function toSeconds(time) {
+        let [h, m, s] = time.split(":").map(Number);
+        return h * 3600 + m * 60 + s;
+    }
+
+    let shift = toSeconds(shiftDuration);
+    let idle = toSeconds(idleTime);
+
+    let active = shift - idle;
+
+    let hours = Math.floor(active / 3600);
+    let minutes = Math.floor((active % 3600) / 60);
+    let seconds = active % 60;
+
+    minutes = minutes.toString().padStart(2, "0");
+    seconds = seconds.toString().padStart(2, "0");
+
+    return `${hours}:${minutes}:${seconds}`;
 }
 
 // ============================================================

@@ -90,9 +90,7 @@ function getIdleTime(startTime, endTime) {
 
     return `${hours}:${minutes}:${seconds}`;
 }
-console.log(getIdleTime("6:00:00 am", "3:00:00 pm"));
-console.log(getIdleTime("8:00:00 am", "11:00:00 pm"));
-console.log(getIdleTime("6:00:00 am", "11:30:00 pm"));
+
 
 // ============================================================
 // Function 3: getActiveTime(shiftDuration, idleTime)

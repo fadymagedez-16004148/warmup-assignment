@@ -51,7 +51,48 @@ function getShiftDuration(startTime, endTime) {
 // ============================================================
 function getIdleTime(startTime, endTime) {
     // TODO: Implement this function
+    function convertToSeconds(time) {
+
+        let parts = time.trim().split(" ");
+        let timePart = parts[0];
+        let period = parts[1];
+
+        let [h, m, s] = timePart.split(":").map(Number);
+
+        if (period === "pm" && h !== 12) h += 12;
+        if (period === "am" && h === 12) h = 0;
+
+        return h * 3600 + m * 60 + s;
+    }
+
+    let start = convertToSeconds(startTime);
+    let end = convertToSeconds(endTime);
+
+    let eightAM = 8 * 3600;
+    let tenPM = 22 * 3600;
+
+    let idle = 0;
+
+    if (start < eightAM) {
+        idle += Math.min(end, eightAM) - start;
+    }
+
+    if (end > tenPM) {
+        idle += end - Math.max(start, tenPM);
+    }
+
+    let hours = Math.floor(idle / 3600);
+    let minutes = Math.floor((idle % 3600) / 60);
+    let seconds = idle % 60;
+
+    minutes = minutes.toString().padStart(2, "0");
+    seconds = seconds.toString().padStart(2, "0");
+
+    return `${hours}:${minutes}:${seconds}`;
 }
+console.log(getIdleTime("6:00:00 am", "3:00:00 pm"));
+console.log(getIdleTime("8:00:00 am", "11:00:00 pm"));
+console.log(getIdleTime("6:00:00 am", "11:30:00 pm"));
 
 // ============================================================
 // Function 3: getActiveTime(shiftDuration, idleTime)

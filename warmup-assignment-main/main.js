@@ -138,9 +138,9 @@ function metQuota(date, activeTime) {
     let quotaSeconds;
 
     if (date >= "2025-04-10" && date <= "2025-04-30") {
-        quotaSeconds = 6 * 3600;   // 6 hours during Eid
+        quotaSeconds = 6 * 3600;  
     } else {
-        quotaSeconds = 8 * 3600 + 24 * 60;   // 8 hours 24 minutes normally
+        quotaSeconds = 8 * 3600 + 24 * 60;   
     }
 
     if (activeSeconds >= quotaSeconds) {

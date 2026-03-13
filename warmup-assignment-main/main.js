@@ -41,8 +41,7 @@ function getShiftDuration(startTime, endTime) {
 
     return `${hours}:${minutes}:${seconds}`;
 }
-console.log(getShiftDuration("6:01:20 am", "4:13:40 pm"));
-console.log(getShiftDuration("7:30:00 am", "8:42:50 am"));
+
 
 // ============================================================
 // Function 2: getIdleTime(startTime, endTime)

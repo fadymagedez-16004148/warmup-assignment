@@ -159,6 +159,58 @@ function metQuota(date, activeTime) {
 // ============================================================
 function addShiftRecord(textFile, shiftObj) {
     // TODO: Implement this function
+    let data = fs.readFileSync(textFile, "utf8");
+    let lines = data.trim().split("\n");
+
+   
+    for (let line of lines) {
+        let parts = line.split(",");
+
+        let driverID = parts[0];
+        let date = parts[2];
+
+        if (driverID === shiftObj.driverID && date === shiftObj.date) {
+            return {};
+        }
+    }
+
+    
+    let shiftDuration = getShiftDuration(shiftObj.startTime, shiftObj.endTime);
+    let idleTime = getIdleTime(shiftObj.startTime, shiftObj.endTime);
+    let activeTime = getActiveTime(shiftDuration, idleTime);
+    let met = metQuota(shiftObj.date, activeTime);
+
+    let hasBonus = false;
+
+    
+    let newLine =
+        shiftObj.driverID + "," +
+        shiftObj.driverName + "," +
+        shiftObj.date + "," +
+        shiftObj.startTime + "," +
+        shiftObj.endTime + "," +
+        shiftDuration + "," +
+        idleTime + "," +
+        activeTime + "," +
+        met + "," +
+        hasBonus;
+
+    
+    fs.writeFileSync(textFile, data.trim() + "\n" + newLine);
+
+    
+    return {
+        driverID: shiftObj.driverID,
+        driverName: shiftObj.driverName,
+        date: shiftObj.date,
+        startTime: shiftObj.startTime,
+        endTime: shiftObj.endTime,
+        shiftDuration: shiftDuration,
+        idleTime: idleTime,
+        activeTime: activeTime,
+        metQuota: met,
+        hasBonus: hasBonus
+    };
 }
 
 // ============================================================
@@ -232,3 +284,16 @@ module.exports = {
     getRequiredHoursPerMonth,
     getNetPay
 };
+let shiftObj = {
+    driverID: "D1001",
+    driverName: "Ahmed Hassan",
+    date: "2025-04-20",
+    startTime: "6:32:26 am",
+    endTime: "7:26:20 pm"
+};
+
+let textFile = "./shifts.txt";
+
+let result = addShiftRecord(textFile, shiftObj);
+
+console.log(result);

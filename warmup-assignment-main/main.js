@@ -248,7 +248,43 @@ function setBonus(textFile, driverID, date, newValue) {
 // ============================================================
 function countBonusPerMonth(textFile, driverID, month) {
     // TODO: Implement this function
+    let data = fs.readFileSync(textFile, "utf8");
+    let lines = data.trim().split("\n");
+
+    let count = 0;
+    let foundDriver = false;
+
+    month = Number(month); // handles "04" or "4"
+
+    for (let line of lines) {
+
+        let parts = line.split(",");
+
+        let id = parts[0];
+        let date = parts[2];
+        let bonus = parts[9];
+
+        if (id === driverID) {
+
+            foundDriver = true;
+
+            let recordMonth = Number(date.split("-")[1]);
+
+            if (recordMonth === month && bonus === "true") {
+                count++;
+            }
+        }
+    }
+
+    if (!foundDriver) {
+        return -1;
+    }
+
+    return count;
 }
+console.log(countBonusPerMonth("./shifts.txt", "D1001", "04"));
+console.log(countBonusPerMonth("./shifts.txt", "D1001", "4"));
+console.log(countBonusPerMonth("./shifts.txt", "D9999", "04"));
 
 // ============================================================
 // Function 8: getTotalActiveHoursPerMonth(textFile, driverID, month)

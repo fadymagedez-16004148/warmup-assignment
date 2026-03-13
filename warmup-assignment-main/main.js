@@ -284,16 +284,3 @@ module.exports = {
     getRequiredHoursPerMonth,
     getNetPay
 };
-let shiftObj = {
-    driverID: "D1001",
-    driverName: "Ahmed Hassan",
-    date: "2025-04-20",
-    startTime: "6:32:26 am",
-    endTime: "7:26:20 pm"
-};
-
-let textFile = "./shifts.txt";
-
-let result = addShiftRecord(textFile, shiftObj);
-
-console.log(result);

@@ -128,7 +128,28 @@ function getActiveTime(shiftDuration, idleTime) {
 // ============================================================
 function metQuota(date, activeTime) {
     // TODO: Implement this function
+     let parts = activeTime.split(":");
+    let hours = Number(parts[0]);
+    let minutes = Number(parts[1]);
+    let seconds = Number(parts[2]);
+
+    let activeSeconds = hours * 3600 + minutes * 60 + seconds;
+
+    let quotaSeconds;
+
+    if (date >= "2025-04-10" && date <= "2025-04-30") {
+        quotaSeconds = 6 * 3600;   // 6 hours during Eid
+    } else {
+        quotaSeconds = 8 * 3600 + 24 * 60;   // 8 hours 24 minutes normally
+    }
+
+    if (activeSeconds >= quotaSeconds) {
+        return true;
+    } else {
+        return false;
+    }
 }
+
 
 // ============================================================
 // Function 5: addShiftRecord(textFile, shiftObj)

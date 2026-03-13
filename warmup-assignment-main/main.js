@@ -282,9 +282,7 @@ function countBonusPerMonth(textFile, driverID, month) {
 
     return count;
 }
-console.log(countBonusPerMonth("./shifts.txt", "D1001", "04"));
-console.log(countBonusPerMonth("./shifts.txt", "D1001", "4"));
-console.log(countBonusPerMonth("./shifts.txt", "D9999", "04"));
+
 
 // ============================================================
 // Function 8: getTotalActiveHoursPerMonth(textFile, driverID, month)
